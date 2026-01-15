@@ -15,7 +15,7 @@ let tweets = [
   },
   {
     id: "2", // 트윗 아이디
-    text: "This is Bob", // 트윗 텍스트
+    text: "This is Ellie", // 트윗 텍스트
     createdAt: Date.now().toString(), // 트윗 생성 날짜
     name: "Ellie", // 사용자 이름
     username: "ellie", // 사용자 닉네임 (아이디)
@@ -23,29 +23,34 @@ let tweets = [
   },
 ];
 
-export function getAll() {
+// DB에서 데이터 읽고 쓸 때는 시간 오래 걸림
+// 데이터관련 일 수행하는 동안 서버가 다른 것도 실행할 수 있게
+// 비동기적으로 처리해주는 것이 좋음 async
+// 그냥 리턴 하더라도 async 키워드 붙으면 promise형태로 반환함 (JS 문법)
+
+export async function getAll() {
   return tweets;
 }
-export function getAllByUsername(username) {
+export async function getAllByUsername(username) {
   return tweets.filter((t) => t.username === username);
 }
 
-export function getById(id) {
+export async function getById(id) {
   return tweets.find((t) => t.id === id);
 }
-export function remove(id) {
+export async function remove(id) {
   tweets = tweets.filter((t) => t.id !== id);
 }
 
-export function update(id, text) {
-  const tweet = this.getById(id);
+export async function update(id, text) {
+  const tweet = tweets.find((t) => t.id === id);
   if (tweet) {
     tweet.text = text;
   }
   return tweet;
 }
 
-export function create(text, name, username) {
+export async function create(text, name, username) {
   const tweet = {
     id: Date.now().toString(),
     text,
