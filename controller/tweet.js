@@ -33,10 +33,9 @@ export async function getTweet(req, res) {
   }
 }
 export async function createTweet(req, res) {
-  const { text, name, username } = req.body; // object Destructuring
+  const { text } = req.body; // object Destructuring
   // 객체 안에 있는 값을 쏙쏙 뽑아서 변수로 만드는 문법
-
-  const tweet = await tweetRepository.create(text, name, username);
+  const tweet = await tweetRepository.create(text, req.userId); // auth middleware에서 저장한 userId값을 request에서 읽어와 트윗 만듬
   res.status(201).json(tweet);
 }
 export async function updateTweet(req, res) {

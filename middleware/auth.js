@@ -14,7 +14,6 @@ export const isAuth = async (req, res, next) => {
     return res.status(401).json(AUTH_ERROR);
   }
   const token = authHeader.split(" ")[1];
-  console.log("token: " + token);
 
   // TODO: Make it secure!
   jwt.verify(token, secret, async (error, decoded) => {
