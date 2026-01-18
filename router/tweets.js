@@ -6,6 +6,7 @@ import { body, query, param, validationResult } from "express-validator";
 import { validate } from "../middleware/validator.js";
 // Controller(logic)
 import * as controller from "../controller/tweet.js";
+import { isAuth } from "../middleware/auth.js";
 
 const app = express();
 const router = express.Router();
@@ -26,17 +27,17 @@ const validateTweet = [
 app.use(express.json());
 
 // GET /tweets | /tweets?username=:username
-router.get("/", controller.getTweets);
+router.get("/", isAuth, controller.getTweets);
 // POST /tweets
-router.post("/", validateTweet, controller.createTweet);
+router.post("/", isAuth, validateTweet, controller.createTweet);
 // controller.createTweet() 이렇게 ()괄호 쓰면 함수 결과값 전달하는 것 되어버림 -> createTweet 이렇게 써야함
 
 // GET /tweets/:id
-router.get("/:id", controller.getTweet);
+router.get("/:id", isAuth, controller.getTweet);
 // PUT /tweets/:id
-router.put("/:id", validateTweet, controller.updateTweet);
+router.put("/:id", isAuth, validateTweet, controller.updateTweet);
 // DELETE /tweets/:id
-router.delete("/:id", controller.deleteTweet);
+router.delete("/:id", isAuth, controller.deleteTweet);
 // id를 잘못 요청했다면 어차피 찾을 수 없다는 에러가 뜨기때문에 안해줘도 ok
 // name, username은 '로그인' 구현하면 따로 client한테 값을 받을 일 없으므로 여기서 validate 안해도 ok
 
