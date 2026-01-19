@@ -1,3 +1,4 @@
+// Model(data)
 // data 읽고 쓰는 로직은 여기에
 
 // data on memory
@@ -25,10 +26,35 @@ let tweets = [
 export function getAll() {
   return tweets;
 }
+export function getAllByUsername(username) {
+  return tweets.filter((t) => t.username === username);
+}
 
 export function getById(id) {
-  return (tweet = tweets.find((t) => t.id === id));
+  return tweets.find((t) => t.id === id);
 }
 export function remove(id) {
   tweets = tweets.filter((t) => t.id !== id);
+}
+
+export function update(id, text) {
+  const tweet = this.getById(id);
+  if (tweet) {
+    tweet.text = text;
+  }
+  return tweet;
+}
+
+export function create(text, name, username) {
+  const tweet = {
+    id: Date.now().toString(),
+    text,
+    createdAt: new Date(),
+    name,
+    username,
+  };
+  tweets = [tweet, ...tweets];
+  // tweets.push(newData); // 새 tweet이 배열 제일 뒤에 옴
+  // 트위터 특성상 최근 데이터가 배열 제일 앞에 와야함
+  return tweet;
 }
