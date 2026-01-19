@@ -1,11 +1,10 @@
-import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
 import tweetsRouter from "./router/tweets.js";
 import authRouter from "./router/auth.js";
-dotenv.config();
+import { config } from "./config.js";
 
 const app = express();
 
@@ -32,4 +31,4 @@ app.use((errror, req, res, next) => {
   console.error(errror);
   res.sendStatus(500);
 });
-app.listen(8080);
+app.listen(config.host.port);

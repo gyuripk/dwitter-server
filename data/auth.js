@@ -31,13 +31,15 @@ export async function findById(id) {
 
 export async function createUser(user) {
   const created = { ...user, id: Date.now().toString() }; // ...user 쓰면 다 저장됨
-  //   const newUser = {
-  //     username: user.username,
-  //     password: user.password,
-  //     name: user.name,
-  //     email: user.email,
-  //     url: user.url,
-  //   };
+  /*
+    const newUser = {
+      username: user.username,
+      password: user.password,
+      name: user.name,
+      email: user.email,
+      url: user.url,
+    };
+    */
   users.push(created);
   return created.id;
 }

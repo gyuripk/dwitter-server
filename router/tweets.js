@@ -32,8 +32,9 @@ router.get("/", isAuth, controller.getTweets);
 router.post("/", isAuth, validateTweet, controller.createTweet);
 // controller.createTweet() 이렇게 ()괄호 쓰면 함수 결과값 전달하는 것 되어버림 -> createTweet 이렇게 써야함
 
+// Authentication
+// 현재 로그인 된 userId와 같은 id만 본인 계정으로 트윗수정, 삭제할 수 있음
 // GET /tweets/:id
-// Authentication 현재 로그인 된 userId와 같은 id만 본인 계정으로 트윗수정, 삭제할 수 있음
 router.get("/:id", isAuth, controller.getTweet);
 // PUT /tweets/:id
 router.put("/:id", isAuth, validateTweet, controller.updateTweet);

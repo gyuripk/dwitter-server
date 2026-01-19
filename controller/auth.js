@@ -1,18 +1,7 @@
-import express, { json } from "express";
-import * as userRepository from "../data/auth.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import dotenv from "dotenv";
-dotenv.config();
-const secret = process.env.JWT_SECRET;
-
-// TODO: Make it secure!
-const jwtSecretKey = secret;
-const jwtExpiresInDays = "2d";
-const bcryptSaltRounds = 12;
-
-const app = express();
-app.use(json);
+import * as userRepository from "../data/auth.js";
+import { config } from "../config.js";
 
 export async function signUp(req, res) {
   const { username, password, name, email, url } = req.body;
@@ -23,8 +12,7 @@ export async function signUp(req, res) {
   }
 
   // if signup success -> generate token
-  const hashedPwd = await bcrypt.hash(password, bcryptSaltRounds);
-  console.log(hashedPwd);
+  const hashedPwd = await bcrypt.hash(password, config.bcrypt.saltRounds);
 
   const userId = await userRepository.createUser({
     username,
@@ -57,7 +45,9 @@ export async function login(req, res) {
 // 내부에서만 쓰는 함수이므로 export 붙이지 X
 // async로 동작 X
 function createJwtToken(id) {
-  return jwt.sign({ id }, jwtSecretKey, { expiresIn: jwtExpiresInDays });
+  return jwt.sign({ id }, config.jwt.secretKey, {
+    expiresIn: config.jwt.expiresInSec,
+  });
 }
 
 export async function me(req, res, next) {
