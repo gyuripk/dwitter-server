@@ -42,7 +42,6 @@ export async function login(req, res) {
   // if the user is verified
   const { username, password } = req.body;
   const user = await userRepository.findByUsername(username);
-  console.log(user);
 
   if (!user) {
     return res.status(401).json({ message: "invalid user or password" });

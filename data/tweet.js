@@ -10,7 +10,7 @@ let tweets = [
     id: "1", // 트윗 아이디
     text: "hi gyuri", // 트윗 텍스트
     createdAt: new Date().toString(), // 트윗 생성 날짜
-    userId: "1",
+    userId: "1", // foreingkey
   },
   {
     id: "2", // 트윗 아이디
