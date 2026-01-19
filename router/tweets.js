@@ -33,12 +33,11 @@ router.post("/", isAuth, validateTweet, controller.createTweet);
 // controller.createTweet() 이렇게 ()괄호 쓰면 함수 결과값 전달하는 것 되어버림 -> createTweet 이렇게 써야함
 
 // GET /tweets/:id
+// Authentication 현재 로그인 된 userId와 같은 id만 본인 계정으로 트윗수정, 삭제할 수 있음
 router.get("/:id", isAuth, controller.getTweet);
 // PUT /tweets/:id
 router.put("/:id", isAuth, validateTweet, controller.updateTweet);
 // DELETE /tweets/:id
 router.delete("/:id", isAuth, controller.deleteTweet);
-// id를 잘못 요청했다면 어차피 찾을 수 없다는 에러가 뜨기때문에 안해줘도 ok
-// name, username은 '로그인' 구현하면 따로 client한테 값을 받을 일 없으므로 여기서 validate 안해도 ok
 
 export default router;

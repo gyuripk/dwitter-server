@@ -40,21 +40,34 @@ export async function createTweet(req, res) {
 }
 export async function updateTweet(req, res) {
   // req
-  const id = req.params.id;
+  const tweetId = req.params.id;
   const text = req.body.text;
-  const tweet = await tweetRepository.update(id, text);
+  const tweet = await tweetRepository.getById(tweetId);
 
-  if (tweet) {
-    res.status(200).json(tweet);
-  } else {
-    // tweet : undefined
-    res.status(404).json({ message: `Tweet id(${id}) is not found.` });
+  if (!tweet) {
+    res.status(404).json({ message: `Tweet id(${tweetId}) is not found.` });
   }
+  // check user authorization
+  if (req.userId !== tweet.userId) {
+    return res.sendStatus(403); // 403: forbidden error(로그인O 권한X), 401: Unauthorized (로그인X)
+  }
+
+  const updated = await tweetRepository.update(tweetId, text);
+  res.status(200).json(tweet);
 }
+
 export async function deleteTweet(req, res) {
-  const id = req.params.id;
+  const tweetId = req.params.id;
+  const tweet = await tweetRepository.getById(tweetId);
 
-  await tweetRepository.remove(id);
+  if (!tweet) {
+    res.status(404).json({ message: `Tweet id(${tweetId}) is not found.` });
+  }
+  // check user authorization
+  if (req.userId !== tweet.userId) {
+    return res.sendStatus(403);
+  }
 
+  await tweetRepository.remove(tweetId);
   res.status(204).send("Succesfully deleted!");
 }

@@ -8,6 +8,15 @@ let users = [
     email: "ellie@server.com", // 사용자 이메일
     url: "", // 사용자 프로파일 사진 URL
   },
+  {
+    // abc123: $2b$12$DwdkLNqPoKd2BfR3h4snIuDdNN6WNQ8WOWuE5eadSnclUB.OOVAse
+    id: "2",
+    username: "tom",
+    password: `$2b$12$DwdkLNqPoKd2BfR3h4snIuDdNN6WNQ8WOWuE5eadSnclUB.OOVAse`,
+    name: "Tom",
+    email: "tom@server.com",
+    url: "",
+  },
 ];
 
 export async function findByUsername(username) {
