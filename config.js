@@ -21,6 +21,13 @@ export const config = {
   },
   bcrypt: { saltRounds: parseInt(required("BCRYPT_SALT_ROUNDS", 12)) },
   host: { port: parseInt(required("HOST_PORT", 8080)) },
+  db: {
+    host: required("DB_HOST"),
+    user: required("DB_USER"),
+    database: required("DB_DATABASE"),
+    password: required("DB_PASSWORD"),
+    port: parseInt(required("DB_PORT")),
+  },
 };
 
 // 그냥 .env파일에 정의하고 process.env.환경변수명 사용방법 => 문제점 2가지
