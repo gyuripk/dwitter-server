@@ -3,6 +3,7 @@
 // Model과 통신, 에러 발생시 어떻게 보여줄지만 적기
 
 // Modle(data)
+import { getSocketIO } from "../connection/socket.js";
 import * as tweetRepository from "../data/tweet.js";
 
 //서버가 다른 것도 실행할 수 있게
@@ -36,7 +37,11 @@ export async function createTweet(req, res) {
   const { text } = req.body; // object Destructuring
   // 객체 안에 있는 값을 쏙쏙 뽑아서 변수로 만드는 문법
   const tweet = await tweetRepository.create(text, req.userId); // auth middleware에서 저장한 userId값을 request에서 읽어와 트윗 만듬
+
+  // socket 이용해서 모든 사용자에게 emit 하기
   res.status(201).json(tweet);
+  getSocketIO().emit("tweets", tweet); // 모든 유저에게 broadcast하기
+  // getSocketIO().emit("tweets-creation", {command: 'created', tweet}); // '생성'으로 묶어서 보낼 수 있음
 }
 export async function updateTweet(req, res) {
   // req

@@ -5,6 +5,7 @@ import helmet from "helmet";
 import tweetsRouter from "./router/tweets.js";
 import authRouter from "./router/auth.js";
 import { config } from "./config.js";
+import { initSocket } from "./connection/socket.js";
 
 const app = express();
 
@@ -14,21 +15,25 @@ const corsOption = {
   credentials: true, // "Access-Control-Allow-Credentials: true"
 };
 
+// middleware
 app.use(express.json());
 app.use(cors(corsOption));
 app.use(morgan("short"));
 app.use(helmet());
 
+// router
 app.use("/tweets", tweetsRouter);
 app.use("/auth", authRouter);
 
+// error handling
 app.use((req, res, next) => {
   res.sendStatus(404);
 });
 
-// error handling
 app.use((errror, req, res, next) => {
   console.error(errror);
   res.sendStatus(500);
 });
-app.listen(config.host.port);
+
+const server = app.listen(config.host.port);
+initSocket(server);
