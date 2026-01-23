@@ -1,13 +1,11 @@
-import mysql from "mysql2";
 import { config } from "../config.js";
+import SQ from "sequelize";
 
-const pool = mysql.createPool({
-  host: config.db.host,
-  user: config.db.user,
-  database: config.db.database,
-  password: config.db.password,
+const { host, user, database, password } = config.db;
+
+// sequelize 객체 export
+export const sequelize = new SQ.Sequelize(database, user, password, {
+  host,
+  dialect: "mysql",
+  logging: false, // db 실행 로그 남지 않음 -> 개발시 truen, 배포시 fasle
 });
-
-// async (promise) ??
-// data Model에서 이 db 이용해서 접속, CURD함
-export const db = pool.promise();

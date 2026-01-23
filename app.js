@@ -6,7 +6,7 @@ import tweetsRouter from "./router/tweets.js";
 import authRouter from "./router/auth.js";
 import { config } from "./config.js";
 import { initSocket } from "./connection/socket.js";
-import { db } from "./db/database.js";
+import { sequelize } from "./db/database.js";
 
 const app = express();
 
@@ -36,9 +36,11 @@ app.use((errror, req, res, next) => {
   res.sendStatus(500);
 });
 
-// connect to db
-db.getConnection(); //
-// .then((connection) => console.log(connection));
-
-const server = app.listen(config.host.port);
-initSocket(server);
+// connect to DB
+sequelize.sync().then((client) => {
+  // data Model과 DB를 비교하고 없으면 테이블 만들어 sync 시킴
+  // console.log(client);
+  // 데이터 잘 연결된 후 서버 실행
+  const server = app.listen(config.host.port);
+  initSocket(server);
+});
