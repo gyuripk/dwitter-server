@@ -37,6 +37,8 @@ export async function createTweet(req, res) {
   const { text } = req.body; // object Destructuring
   // 객체 안에 있는 값을 쏙쏙 뽑아서 변수로 만드는 문법
   const tweet = await tweetRepository.create(text, req.userId); // auth middleware에서 저장한 userId값을 request에서 읽어와 트윗 만듬
+  console.log("req.userId: ", req.userId);
+  console.log("createTweet: ", tweet);
 
   // socket 이용해서 모든 사용자에게 emit 하기
   res.status(201).json(tweet);
@@ -58,7 +60,7 @@ export async function updateTweet(req, res) {
   }
 
   const updated = await tweetRepository.update(tweetId, text);
-  res.status(200).json(tweet);
+  res.status(200).json(updated);
 }
 
 export async function deleteTweet(req, res) {
