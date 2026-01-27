@@ -15,7 +15,6 @@ export async function getTweets(req, res) {
   const data = await (username
     ? tweetRepository.getAllByUsername(username)
     : tweetRepository.getAll()); // array
-  console.log(data);
 
   res.status(200).json(data);
 }
@@ -58,7 +57,7 @@ export async function updateTweet(req, res) {
   }
 
   const updated = await tweetRepository.update(tweetId, text);
-  res.status(200).json(tweet);
+  res.status(200).json(updated);
 }
 
 export async function deleteTweet(req, res) {

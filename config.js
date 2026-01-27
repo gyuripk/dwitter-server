@@ -21,6 +21,7 @@ export const config = {
   },
   bcrypt: { saltRounds: parseInt(required("BCRYPT_SALT_ROUNDS", 12)) },
   host: { port: parseInt(required("HOST_PORT", 8080)) },
+  db: { host: required("MONGODB_URI") },
 };
 
 // 그냥 .env파일에 정의하고 process.env.환경변수명 사용방법 => 문제점 2가지
