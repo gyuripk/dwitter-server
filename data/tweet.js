@@ -1,5 +1,5 @@
-import { ObjectId } from "mongodb";
-import { getTweets } from "../db/database.js";
+import Mongoose from "mongoose";
+import { useVirtualId } from "../db/database.js";
 import * as userRepository from "./auth.js";
 // Model(data)
 // data 읽고 쓰는 로직은 여기에
@@ -18,69 +18,53 @@ import * as userRepository from "./auth.js";
 // 비동기적으로 처리해주는 것이 좋음 async
 // 데이터를 리턴 하더라도 async 키워드 붙으면 promise형태로 반환함 (JS 문법)
 
+// data integrity, validate data
+const tweetSchema = new Mongoose.Schema(
+  {
+    username: { type: String, required: true },
+    name: { type: String, required: true },
+    text: { type: String, required: true },
+    userId: { type: String, required: true },
+    url: String,
+  },
+  { timestamps: true }, // createdAt
+);
+
+useVirtualId(tweetSchema);
+const Tweet = Mongoose.model("Tweet", tweetSchema);
+
 export async function getAll() {
   // async: 그 작업이 오래 걸리는 비동기 작업이라고 선언함. (결과가 Promise가 됨)
   // async 함수는 무조건 Promise(약속, 대기표, 진동벨) 리턴함
   //      return { ...tweet, username, name, url };
-  return getTweets() //
-    .find({})
-    .sort({ createdAt: -1 })
-    .toArray()
-    .then(mapTweets);
+  return Tweet.find().sort({ createdAt: -1 });
 }
 
 export async function getAllByUsername(username) {
-  return getTweets()
-    .find({ username })
-    .sort({ createdAt: -1 })
-    .toArray()
-    .then(mapTweets);
+  return Tweet.find({ username }).sort({ createdAt: -1 });
 }
 
 export async function getById(id) {
-  return getTweets()
-    .findOne({ _id: new ObjectId(id) })
-    .then(mapOptionalTweet);
+  return Tweet.findById(id);
 }
 
 export async function create(text, userId) {
-  // user 데이터 추가 (중복)
-  const { username, name, url } = await userRepository.findById(userId);
-
-  const tweet = {
-    // automatically generate id
-    text,
-    createdAt: new Date(),
-    userId,
-    username,
-    name,
-    url,
-  };
-  // insert
-  return getTweets()
-    .insertOne(tweet)
-    .then((data) => mapOptionalTweet({ ...tweet, _id: data.insertedId }));
+  // user 데이터 추가 (중복)>
+  return userRepository.findById(userId).then((user) =>
+    Tweet.insertOne({
+      text,
+      userId,
+      username: user.username,
+      name: user.name,
+      url: user.url,
+    }),
+  );
 }
 
 export async function update(id, text) {
-  return await getTweets()
-    .findOneAndUpdate(
-      { _id: new ObjectId(id) }, // 1. 찾기 (Filter)
-      { $set: { text } }, // 2. 수정하기 (Update)
-      { returnDocument: "after" }, // 3. 수정된 후("after")의 데이터를 줘!
-    )
-    .then(mapOptionalTweet);
+  return Tweet.findByIdAndUpdate(id, { text }, { returnDocument: "after" });
 }
 
 export async function remove(id) {
-  return await getTweets().deleteOne({ _id: new ObjectId(id) });
-}
-
-function mapOptionalTweet(tweet) {
-  return tweet ? { ...tweet, id: tweet._id.toString() } : tweet;
-}
-
-function mapTweets(tweets) {
-  return tweets.map(mapOptionalTweet);
-  // return tweets.map((tweet) => mapOptionalTweet(tweet)); // 위 코드와 동일
+  return Tweet.findByIdAndDelete(id);
 }
