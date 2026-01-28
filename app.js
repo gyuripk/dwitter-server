@@ -11,8 +11,9 @@ import { sequelize } from "./db/database.js";
 const app = express();
 
 const corsOption = {
-  origin: ["http://localhost:3000"], // 특정 IP에서만 cors policy 허용하도록 옵션 줄 수 있음
-  optionsSuccessStatus: 200,
+  origin: config.cors.allowedOrigin,
+  // ["http://localhost:3000"], // 특정 IP에서만 cors policy 허용하도록 옵션 줄 수 있음
+  optionsSuccessStatus: 200, // 예전 브라우저를 위해 설정
   credentials: true, // "Access-Control-Allow-Credentials: true"
 };
 
@@ -37,10 +38,11 @@ app.use((errror, req, res, next) => {
 });
 
 // connect to DB
-sequelize.sync().then((client) => {
+sequelize.sync().then(() => {
   // data Model과 DB를 비교하고 없으면 테이블 만들어 sync 시킴
-  // console.log(client);
+  console.log(`Server is started ... ${new Date()}`);
+
   // 데이터 잘 연결된 후 서버 실행
-  const server = app.listen(config.host.port);
+  const server = app.listen(config.port);
   initSocket(server);
 });

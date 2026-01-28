@@ -20,13 +20,15 @@ export const config = {
     // integer 값인 경우는 parseInt로 숫자로 만들어줘야 에러 안남
   },
   bcrypt: { saltRounds: parseInt(required("BCRYPT_SALT_ROUNDS", 12)) },
-  host: { port: parseInt(required("HOST_PORT", 8080)) },
   db: {
     host: required("DB_HOST"),
     user: required("DB_USER"),
     database: required("DB_DATABASE"),
     password: required("DB_PASSWORD"),
-    port: parseInt(required("DB_PORT")),
+  },
+  port: parseInt(required("PORT"), 8080),
+  cors: {
+    allowedOrigin: required("CORS_ALLOW_ORIGIN"),
   },
 };
 
