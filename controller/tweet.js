@@ -39,7 +39,7 @@ export async function createTweet(req, res) {
 
   // socket 이용해서 모든 사용자에게 emit 하기
   res.status(201).json(tweet);
-  getSocketIO().emit("tweets", tweet); // 모든 유저에게 broadcast하기
+  getSocketIO().emit("tweets-created", tweet); // 모든 유저에게 broadcast하기
   // getSocketIO().emit("tweets-creation", {command: 'created', tweet}); // '생성'으로 묶어서 보낼 수 있음
 }
 export async function updateTweet(req, res) {
@@ -58,6 +58,7 @@ export async function updateTweet(req, res) {
 
   const updated = await tweetRepository.update(tweetId, text);
   res.status(200).json(updated);
+  getSocketIO().emit("tweets-updated", updated); // 모든 유저에게 broadcast하기
 }
 
 export async function deleteTweet(req, res) {
@@ -74,4 +75,5 @@ export async function deleteTweet(req, res) {
 
   await tweetRepository.remove(tweetId);
   res.status(204).send("Succesfully deleted!");
+  getSocketIO().emit("tweets-deleted", tweetId); // 모든 유저에게 broadcast하기
 }
