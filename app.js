@@ -11,7 +11,7 @@ import { connectDB } from "./db/database.js";
 const app = express();
 
 const corsOption = {
-  origin: ["http://localhost:3000"], // 특정 IP에서만 cors policy 허용하도록 옵션 줄 수 있음
+  origin: config.cors.allowedOrigin, // 특정 IP에서만 cors policy 허용하도록 옵션 줄 수 있음
   optionsSuccessStatus: 200,
   credentials: true, // "Access-Control-Allow-Credentials: true"
 };
@@ -39,7 +39,9 @@ app.use((errror, req, res, next) => {
 // connect to db
 connectDB()
   .then(() => {
-    const server = app.listen(config.host.port);
+    console.log(`Server is started... ${new Date()}`);
+
+    const server = app.listen(config.port);
     initSocket(server);
   })
   .catch(console.error);

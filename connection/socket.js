@@ -8,7 +8,7 @@ class Socket {
     // create socket
     this.io = new Server(server, {
       cors: {
-        origin: "*",
+        origin: config.cors.allowedOrigin,
       },
     });
 
