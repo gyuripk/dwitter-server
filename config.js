@@ -25,6 +25,9 @@ export const config = {
   cors: {
     allowedOrigin: required("CORS_ALLOW_ORIGIN"),
   },
+  csrf: {
+    plainToken: required("CSRF_SECRET_KEY"),
+  },
 };
 
 // 그냥 .env파일에 정의하고 process.env.환경변수명 사용방법 => 문제점 2가지

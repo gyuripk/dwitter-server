@@ -6,12 +6,26 @@ const AUTH_ERROR = { message: "Authentication Error" };
 
 export const isAuth = async (req, res, next) => {
   // middleware function
-  const authHeader = req.get("Authorization");
-  if (!(authHeader && authHeader.startsWith("Bearer "))) {
-    // auth헤더가 없거나 Bearer로 시작하지 않는 경우
+
+  // 1. Header (for Non-Browser Client)
+  // 2. Cookie (for Browser clinet)
+
+  // get the token
+  let token;
+  // check the header first
+  const authHeader = req.get("Authorization"); // 요청의 헤더의 Authorization에 값
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    // auth헤더가 있거나 Bearer로 시작하는 경우
+    token = authHeader.split(" ")[1];
+  }
+  // if no token in the header, check the cookie
+  if (!token) {
+    token = req.cookies["token"];
+  }
+
+  if (!token) {
     return res.status(401).json(AUTH_ERROR);
   }
-  const token = authHeader.split(" ")[1];
 
   jwt.verify(token, config.jwt.secretKey, async (error, decoded) => {
     // ?? async 왜 붙임?
