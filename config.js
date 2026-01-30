@@ -28,6 +28,10 @@ export const config = {
   csrf: {
     plainToken: required("CSRF_SECRET_KEY"),
   },
+  rateLimit: {
+    windowMs: parseInt(required("RATE_LIMIT_WINDOW_MS")),
+    maxRequest: parseInt(required("RATE_LIMIT_MAX_REQUESTS")),
+  },
 };
 
 // 그냥 .env파일에 정의하고 process.env.환경변수명 사용방법 => 문제점 2가지

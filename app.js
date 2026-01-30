@@ -9,6 +9,7 @@ import { config } from "./config.js";
 import { initSocket } from "./connection/socket.js";
 import { connectDB } from "./db/database.js";
 import { csrfCheck } from "./middleware/csrf.js";
+import rateLimit from "./middleware/rate-limiter.js";
 
 const app = express();
 
@@ -23,11 +24,12 @@ const corsOption = {
 // middleware
 app.use(express.json());
 app.use(cookieParser());
+app.use(helmet());
 app.use(cors(corsOption));
 app.use(morgan("short"));
-app.use(helmet());
 
-app.use(csrfCheck);
+app.use(rateLimit); // csrfCheck 보다 먼저 실행해야 GET포함 모든 요청에 제한걸 수있음
+app.use(csrfCheck); // 서버 변경 안되는 GET 요청은 검사안함
 
 // router
 app.use("/tweets", tweetsRouter);

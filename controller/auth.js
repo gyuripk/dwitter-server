@@ -77,7 +77,7 @@ export async function me(req, res, next) {
 
 export async function csrfToken(req, res, next) {
   const csrfToken = await generateCSRFToken();
-  res.status(200).json({ csrfToken });
+  res.status(200).json({ csrfToken }); // body에 csrfToken 보냄 -> 브라우저 network>response 탭에서 토큰 확인가능
 }
 
 async function generateCSRFToken() {
